@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:tyshop_app/ui/customview/button_builder.dart';
+import 'package:tyshop_app/ui/dialog/loading.dart';
 import 'package:tyshop_app/ui/menu/menu.dart';
 import 'package:tyshop_app/ui/register/register.dart';
 
@@ -89,11 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   margin: EdgeInsets.only(top: 15),
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: RaisedButton(
-                    onPressed: (){
-                                 Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MenuPage()),
-  );
+                    onPressed: () {
+                      DialogController.loadingDialog(context);
                     },
                     color: Colors.green,
                     shape: new RoundedRectangleBorder(
@@ -149,7 +147,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 margin: EdgeInsets.only(top: 10),
                 child: FlatButton(
                   onPressed: () {
-             Navigator.push(context, PageTransition(type: PageTransitionType.downToUp, child: RegisterScreen()));
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.downToUp,
+                            child: RegisterScreen()));
                   },
                   child: Text(
                     "DON'T HAVE AN ACCOUNT?",
