@@ -14,7 +14,12 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
+ return  MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MultiProvider(
       providers: [
         ChangeNotifierProvider<UserRepository>(builder: (context)=>UserRepository.instance()),
         ChangeNotifierProvider<PasswordState>(builder: (context) => PasswordState())
@@ -24,6 +29,7 @@ class RegisterScreen extends StatelessWidget {
           return RegisterScreenState(userRepository: user,passwordState: passwordstate);
         },
       ),
+    )
     );
   }
 }
@@ -44,133 +50,144 @@ class _RegisterScreenState extends State<RegisterScreenState> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: Text(""),
-          actions: <Widget>[
-            new IconButton(
-              icon: new Icon(Icons.close),
-              color: Colors.black,
-              onPressed: () => Navigator.of(context).pop(null),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        title: Text(""),
+        actions: <Widget>[
+          new IconButton(
+            icon: new Icon(Icons.close),
+            color: Colors.black,
+            onPressed: () => Navigator.of(context).pop(null),
+          ),
+        ],
+        leading: new Container(),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Center(
+            child: Image.asset(
+              'assets/images/bg_register.png',
+              scale: 1.1,
             ),
-          ],
-          leading: new Container(),
-        ),
-        body: ListView(
-          children: <Widget>[
-            Center(
-              child: Image.asset(
-                'assets/images/bg_register.png',
-                scale: 1.1,
+          ),
+          Center(
+              child: Text(
+            "Sign Up",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          )),
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextField(
+              keyboardType: TextInputType.emailAddress,
+              controller: _emailController,
+              style: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                contentPadding: new EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 10.0),
+                hintText: 'Email',
+                filled: true,
+                fillColor: Colors.grey.withAlpha(40),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
               ),
             ),
-            Center(
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextField(
+              obscureText: true,
+              onChanged: (change) => widget.passwordState.setPassword(change),
+              keyboardType: TextInputType.number,
+              controller: _passwordController,
+              style: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                contentPadding: new EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 10.0),
+                hintText: 'Password',
+                filled: true,
+                fillColor: Colors.grey.withAlpha(40),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextField(
+               onChanged: (change) => widget.passwordState.setConfirmPassword(change),
+              obscureText: true,
+              keyboardType: TextInputType.number,
+              controller: _confirmPasswordController,
+              style: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                contentPadding: new EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 10.0),
+                hintText: 'Confrim Password',
+                filled: true,
+                fillColor: Colors.grey.withAlpha(40),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              margin: EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(left: 30, right: 30),
+              child: FlatButton(
+                 onPressed: ()  async{
+                 bool isSuccess = await widget.userRepository.register(context, _emailController.text, _passwordController.text);
+                 if(isSuccess){
+                  
+                  print('fdsf');
+                 exit();
+                 }else{
+                  print('ddd');
+                 }
+                 },
+                color: widget.passwordState.getButtonColor(),
                 child: Text(
-              "Sign Up",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            )),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: TextField(
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
-                style: TextStyle(fontSize: 15),
-                decoration: InputDecoration(
-                  contentPadding: new EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 10.0),
-                  hintText: 'Email',
-                  filled: true,
-                  fillColor: Colors.grey.withAlpha(40),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
+                  "Register",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 15),
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: TextField(
-                obscureText: true,
-                onChanged: (change) => widget.passwordState.setPassword(change),
-                keyboardType: TextInputType.number,
-                controller: _passwordController,
-                style: TextStyle(fontSize: 15),
-                decoration: InputDecoration(
-                  contentPadding: new EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 10.0),
-                  hintText: 'Password',
-                  filled: true,
-                  fillColor: Colors.grey.withAlpha(40),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(top: 15),
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: TextField(
-                 onChanged: (change) => widget.passwordState.setConfirmPassword(change),
-                obscureText: true,
-                keyboardType: TextInputType.number,
-                controller: _confirmPasswordController,
-                style: TextStyle(fontSize: 15),
-                decoration: InputDecoration(
-                  contentPadding: new EdgeInsets.symmetric(
-                      vertical: 12.0, horizontal: 10.0),
-                  hintText: 'Confrim Password',
-                  filled: true,
-                  fillColor: Colors.grey.withAlpha(40),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                    borderRadius: new BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                margin: EdgeInsets.only(top: 20),
-                padding: const EdgeInsets.only(left: 30, right: 30),
-                child: CupertinoButton(
-                   onPressed: ()  {
-                    widget.userRepository.register(context, _emailController.text, _passwordController.text);
-                   },
-                  color: widget.passwordState.getButtonColor(),
-                  child: Text(
-                    "Register",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
+  void exit(){
+    setState(() {
+      print("fdsf");
+        Navigator.of(context, rootNavigator: true).pop();
+    });
+  }
   // Future createUser() async {
   //   DialogController.loadingDialog(context);
   //   FirebaseUser user;

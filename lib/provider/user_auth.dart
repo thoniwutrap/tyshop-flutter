@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tyshop_app/ui/dialog/loading.dart';
 import 'package:tyshop_app/widget/flushbar.dart';
 
@@ -21,16 +22,19 @@ class UserRepository with ChangeNotifier {
     DialogController.loadingDialog(context);
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      Navigator.of(context, rootNavigator: true).pop();
+      FlushbarHelper.showFlushbar("Your account has been created", context);
       return true;
-    } catch (e) {
-      return false;
-    }finally{
-       Navigator.of(context, rootNavigator: true).pop();
-      if (user != null) {
-        FlushbarHelper.showFlushbar("Your account has been created", context);
-      } else {
-        FlushbarHelper.showFlushbar("This account is already member", context);
+    } catch (signUpError) {
+    if(signUpError is PlatformException) {
+      switch(signUpError.code){
+        case  'ERROR_EMAIL_ALREADY_IN_USE' : {
+          Navigator.of(context, rootNavigator: true).pop();
+          FlushbarHelper.showFlushbar("This account is already member", context);
+        }
       }
+     }
+     return false;
     }
   }
 
