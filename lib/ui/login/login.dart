@@ -1,19 +1,36 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
+import 'package:tyshop_app/provider/user_auth.dart';
 import 'package:tyshop_app/ui/customview/button_builder.dart';
 import 'package:tyshop_app/ui/dialog/loading.dart';
 import 'package:tyshop_app/ui/menu/menu.dart';
 import 'package:tyshop_app/ui/register/register.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<UserRepository>(
+        builder: (_) => UserRepository.instance(),
+        child: mLoginScreen(),
+      );
+  }
+}
+
+class mLoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<mLoginScreen> {
+  var emailController = new TextEditingController();
+  var passwordController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+     final appState = Provider.of<UserRepository>(context);
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -44,6 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: TextField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
                   style: TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     contentPadding: new EdgeInsets.symmetric(
@@ -66,6 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 margin: EdgeInsets.only(top: 15),
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 child: TextField(
+                  obscureText: true,
+                   keyboardType: TextInputType.number,
+                  controller: passwordController,
                   style: TextStyle(fontSize: 15),
                   decoration: InputDecoration(
                     contentPadding: new EdgeInsets.symmetric(
@@ -91,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: RaisedButton(
                     onPressed: () {
-                      DialogController.loadingDialog(context);
+                     signIn(appState);
                     },
                     color: Colors.green,
                     shape: new RoundedRectangleBorder(
@@ -146,12 +168,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: EdgeInsets.only(right: 30, left: 30),
                 margin: EdgeInsets.only(top: 10),
                 child: FlatButton(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    Map results = await Navigator.push(
                         context,
                         PageTransition(
                             type: PageTransitionType.downToUp,
                             child: RegisterScreen()));
+                    if (results != null &&
+                        results.containsKey('email') &&
+                        results.containsKey('password')) {
+                      setState(() {
+                        emailController.text = results['email'];
+                        passwordController.text = results['password'];
+                        signIn(appState);
+                      });
+                    }
                   },
                   child: Text(
                     "DON'T HAVE AN ACCOUNT?",
@@ -214,4 +245,15 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     ),
   );
+
+  void signIn(UserRepository auth) async{
+    bool isSuccess = await auth.signIn(context,emailController.text,passwordController.text);
+                    if(isSuccess){
+                        Navigator.pushReplacement(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: MenuPage()));
+                    }
+  }
 }

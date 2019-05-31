@@ -18,40 +18,52 @@ class UserRepository with ChangeNotifier {
   Status get status => _status;
   FirebaseUser get user => _user;
 
-  Future<bool> register(BuildContext context,String email, String password) async{
+  Future<bool> register(
+     BuildContext context, String email, String password) async {
     DialogController.loadingDialog(context);
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Navigator.of(context, rootNavigator: true).pop();
-      FlushbarHelper.showFlushbar("Your account has been created", context);
+      await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       return true;
     } catch (signUpError) {
-    if(signUpError is PlatformException) {
-      switch(signUpError.code){
-        case  'ERROR_EMAIL_ALREADY_IN_USE' : {
-          Navigator.of(context, rootNavigator: true).pop();
-          FlushbarHelper.showFlushbar("This account is already member", context);
+      if (signUpError is PlatformException) {
+        switch (signUpError.code) {
+          case 'ERROR_EMAIL_ALREADY_IN_USE':
+            FlushbarHelper.showFlushbar(
+                "This account is already member", context);
+            break;
+          case 'ERROR_INVALID_EMAIL':
+            FlushbarHelper.showFlushbar("email is invalid", context);
+            break;
+          default:
+            FlushbarHelper.showFlushbar(signUpError.code, context);
+            break;
         }
       }
-     }
-     return false;
+      return false;
+    }finally{
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
 
-
-  Future<bool> signIn(String email, String password) async {
+  Future<bool> signIn(BuildContext context,String email, String password) async {
+     DialogController.loadingDialog(context);
     try {
       _status = Status.Authenticating;
       notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return true;
-    } catch (e) {
+    } catch (signUpError) {
+        if (signUpError is PlatformException) {
+           FlushbarHelper.showFlushbar(signUpError.code, context);
+      }
       _status = Status.Unauthenticated;
       notifyListeners();
       return false;
+    }finally{
+      Navigator.of(context, rootNavigator: true).pop();
     }
   }
-
 
   Future signOut() async {
     _auth.signOut();

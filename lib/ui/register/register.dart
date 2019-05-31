@@ -8,41 +8,38 @@ import 'package:tyshop_app/ui/register/password_state.dart';
 import 'package:tyshop_app/widget/flushbar.dart';
 import 'package:provider/provider.dart';
 
-
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
- return  MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MultiProvider(
+    return MaterialApp(
+        home: MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserRepository>(builder: (context)=>UserRepository.instance()),
-        ChangeNotifierProvider<PasswordState>(builder: (context) => PasswordState())
+        ChangeNotifierProvider<UserRepository>(
+            builder: (context) => UserRepository.instance()),
+        ChangeNotifierProvider<PasswordState>(
+            builder: (context) => PasswordState())
       ],
-      child: Consumer2<UserRepository,PasswordState>(
-        builder: (context,user,passwordstate,widget){
-          return RegisterScreenState(userRepository: user,passwordState: passwordstate);
+      child: Consumer2<UserRepository, PasswordState>(
+        builder: (context, user, passwordstate, widget) {
+          return RegisterScreenState(
+              userRepository: user, passwordState: passwordstate);
         },
       ),
-    )
-    );
+    ));
   }
 }
 
 class RegisterScreenState extends StatefulWidget {
   final UserRepository userRepository;
   final PasswordState passwordState;
-  const RegisterScreenState({Key key, this.userRepository, this.passwordState}): super(key: key);
+  const RegisterScreenState({Key key, this.userRepository, this.passwordState})
+      : super(key: key);
   _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreenState> {
-
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
   var _confirmPasswordController = TextEditingController();
@@ -59,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreenState> {
           new IconButton(
             icon: new Icon(Icons.close),
             color: Colors.black,
-            onPressed: () => Navigator.of(context).pop(null),
+            onPressed: () =>  Navigator.of(context, rootNavigator: true).pop()
           ),
         ],
         leading: new Container(),
@@ -85,8 +82,8 @@ class _RegisterScreenState extends State<RegisterScreenState> {
               controller: _emailController,
               style: TextStyle(fontSize: 15),
               decoration: InputDecoration(
-                contentPadding: new EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 10.0),
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
                 hintText: 'Email',
                 filled: true,
                 fillColor: Colors.grey.withAlpha(40),
@@ -111,8 +108,8 @@ class _RegisterScreenState extends State<RegisterScreenState> {
               controller: _passwordController,
               style: TextStyle(fontSize: 15),
               decoration: InputDecoration(
-                contentPadding: new EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 10.0),
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
                 hintText: 'Password',
                 filled: true,
                 fillColor: Colors.grey.withAlpha(40),
@@ -131,14 +128,15 @@ class _RegisterScreenState extends State<RegisterScreenState> {
             margin: EdgeInsets.only(top: 15),
             padding: const EdgeInsets.only(left: 30, right: 30),
             child: TextField(
-               onChanged: (change) => widget.passwordState.setConfirmPassword(change),
+              onChanged: (change) =>
+                  widget.passwordState.setConfirmPassword(change),
               obscureText: true,
               keyboardType: TextInputType.number,
               controller: _confirmPasswordController,
               style: TextStyle(fontSize: 15),
               decoration: InputDecoration(
-                contentPadding: new EdgeInsets.symmetric(
-                    vertical: 12.0, horizontal: 10.0),
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
                 hintText: 'Confrim Password',
                 filled: true,
                 fillColor: Colors.grey.withAlpha(40),
@@ -158,18 +156,20 @@ class _RegisterScreenState extends State<RegisterScreenState> {
             child: Container(
               margin: EdgeInsets.only(top: 20),
               padding: const EdgeInsets.only(left: 30, right: 30),
-              child: FlatButton(
-                 onPressed: ()  async{
-                 bool isSuccess = await widget.userRepository.register(context, _emailController.text, _passwordController.text);
-                 if(isSuccess){
-                  
-                  print('fdsf');
-                 exit();
-                 }else{
-                  print('ddd');
-                 }
-                 },
-                color: widget.passwordState.getButtonColor(),
+              child: CupertinoButton(   
+                disabledColor: Color(0xff58595B),
+                onPressed: widget.passwordState.getButtonState() ?    
+                () async {
+                  bool isSuccess = await widget.userRepository.register(
+                      context, _emailController.text, _passwordController.text);
+                  if (isSuccess) {
+                    Navigator.of(context, rootNavigator: true).pop({
+                      'email':_emailController.text,
+                      'password':_passwordController.text
+                      });
+                  }
+                } : null,
+                color: Colors.green,
                 child: Text(
                   "Register",
                   style: TextStyle(color: Colors.white, fontSize: 18),
@@ -181,30 +181,4 @@ class _RegisterScreenState extends State<RegisterScreenState> {
       ),
     );
   }
-
-  void exit(){
-    setState(() {
-      print("fdsf");
-        Navigator.of(context, rootNavigator: true).pop();
-    });
-  }
-  // Future createUser() async {
-  //   DialogController.loadingDialog(context);
-  //   FirebaseUser user;
-  //   try {
-  //     user = await _auth.createUserWithEmailAndPassword(
-  //       email: _emailController.text,
-  //       password: _passwordController.text,
-  //     );
-  //   } catch (e) {
-  //     print(e.toString());
-  //   } finally {
-  //     Navigator.of(context, rootNavigator: true).pop();
-  //     if (user != null) {
-  //       FlushbarHelper.showFlushbar("Your account has been created", context);
-  //     } else {
-  //       FlushbarHelper.showFlushbar("This account is already member", context);
-  //     }
-  //   }
-  // }
 }

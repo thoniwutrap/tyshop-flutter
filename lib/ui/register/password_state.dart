@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 class PasswordState with ChangeNotifier {
   String _password = "";
   String _confirmPassword = "";
-  Color _buttonColor = Color(0xff58595B);
-
+  bool _isButtonDisabled = false;
 
   PasswordState();
-
   getPassword() => _password;
   getConfirmPassword() => _confirmPassword;
-  getButtonColor() => _buttonColor;
+  getButtonState() => _isButtonDisabled;
 
    void setPassword(String text) {
     _password = text;
@@ -29,10 +27,10 @@ class PasswordState with ChangeNotifier {
       if(getPassword().toString().isNotEmpty &&
       getConfirmPassword().toString().isNotEmpty &&
       (getPassword() == getConfirmPassword())){
-          _buttonColor =  Colors.green;
+          _isButtonDisabled = true;
         return true;
       }else{
-           _buttonColor  = Color(0xff58595B);
+           _isButtonDisabled = false;
         return false;
       }
   }
