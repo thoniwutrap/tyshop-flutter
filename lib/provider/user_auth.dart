@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tyshop_app/ui/dialog/loading.dart';
-import 'package:tyshop_app/widget/flushbar.dart';
+
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
@@ -19,24 +19,32 @@ class UserRepository with ChangeNotifier {
   FirebaseUser get user => _user;
 
   Future<bool> register(
-     BuildContext context, String email, String password) async {
+     BuildContext context, String name,String email, String password) async {
     DialogController.loadingDialog(context);
+  print(name);
     try {
-      await _auth.createUserWithEmailAndPassword(
+        await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      return true;
+
+          _user =  await _auth.currentUser();
+              var userUpdateInfo = new UserUpdateInfo();
+             userUpdateInfo.displayName = name;
+           _user.updateProfile(userUpdateInfo);
+          print('USERNAME IS: ${user.displayName}');
+           return true;
     } catch (signUpError) {
       if (signUpError is PlatformException) {
         switch (signUpError.code) {
           case 'ERROR_EMAIL_ALREADY_IN_USE':
-            FlushbarHelper.showFlushbar(
-                "This account is already member", context);
+//            FlushbarHelper.showFlushbar(
+//                "This account is already member", context);
+          print("ERROR_EMAIL_ALREADY_IN_USE");
             break;
           case 'ERROR_INVALID_EMAIL':
-            FlushbarHelper.showFlushbar("email is invalid", context);
+//            FlushbarHelper.showFlushbar("email is invalid", context);
             break;
           default:
-            FlushbarHelper.showFlushbar(signUpError.code, context);
+//            FlushbarHelper.showFlushbar(signUpError.code, context);
             break;
         }
       }
@@ -55,7 +63,7 @@ class UserRepository with ChangeNotifier {
       return true;
     } catch (signUpError) {
         if (signUpError is PlatformException) {
-           FlushbarHelper.showFlushbar(signUpError.code, context);
+          print(signUpError.code);
       }
       _status = Status.Unauthenticated;
       notifyListeners();
@@ -70,6 +78,12 @@ class UserRepository with ChangeNotifier {
     _status = Status.Unauthenticated;
     notifyListeners();
     return Future.delayed(Duration.zero);
+  }
+
+   Future currentUser() async{
+     var displayName = await _user.displayName;
+     print(displayName);
+     return displayName;
   }
 
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {

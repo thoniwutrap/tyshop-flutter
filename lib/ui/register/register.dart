@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tyshop_app/provider/user_auth.dart';
-import 'package:tyshop_app/ui/dialog/loading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tyshop_app/ui/register/password_state.dart';
-import 'package:tyshop_app/widget/flushbar.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
@@ -40,6 +36,7 @@ class RegisterScreenState extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreenState> {
+  var _nameController = TextEditingController();
   var _emailController = TextEditingController();
   var _passwordController = TextEditingController();
   var _confirmPasswordController = TextEditingController();
@@ -54,10 +51,10 @@ class _RegisterScreenState extends State<RegisterScreenState> {
         title: Text(""),
         actions: <Widget>[
           new IconButton(
-            icon: new Icon(Icons.close),
-            color: Colors.black,
-            onPressed: () =>  Navigator.of(context, rootNavigator: true).pop()
-          ),
+              icon: new Icon(Icons.close),
+              color: Colors.black,
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop()),
         ],
         leading: new Container(),
       ),
@@ -66,7 +63,7 @@ class _RegisterScreenState extends State<RegisterScreenState> {
           Center(
             child: Image.asset(
               'assets/images/bg_register.png',
-              scale: 1.1,
+              scale: 1.6,
             ),
           ),
           Center(
@@ -74,6 +71,30 @@ class _RegisterScreenState extends State<RegisterScreenState> {
             "Sign Up",
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           )),
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: TextField(
+              keyboardType: TextInputType.text,
+              controller: _nameController,
+              style: TextStyle(fontSize: 15),
+              decoration: InputDecoration(
+                contentPadding:
+                    new EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
+                hintText: 'Name',
+                filled: true,
+                fillColor: Colors.grey.withAlpha(40),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                  borderRadius: new BorderRadius.circular(10.0),
+                ),
+              ),
+            ),
+          ),
           Container(
             margin: const EdgeInsets.only(top: 20),
             padding: const EdgeInsets.only(left: 30, right: 30),
@@ -156,19 +177,23 @@ class _RegisterScreenState extends State<RegisterScreenState> {
             child: Container(
               margin: EdgeInsets.only(top: 20),
               padding: const EdgeInsets.only(left: 30, right: 30),
-              child: CupertinoButton(   
+              child: CupertinoButton(
                 disabledColor: Color(0xff58595B),
-                onPressed: widget.passwordState.getButtonState() ?    
-                () async {
-                  bool isSuccess = await widget.userRepository.register(
-                      context, _emailController.text, _passwordController.text);
-                  if (isSuccess) {
-                    Navigator.of(context, rootNavigator: true).pop({
-                      'email':_emailController.text,
-                      'password':_passwordController.text
-                      });
-                  }
-                } : null,
+                onPressed: widget.passwordState.getButtonState()
+                    ? () async {
+                        bool isSuccess = await widget.userRepository.register(
+                            context,
+                            _nameController.text,
+                            _emailController.text,
+                            _passwordController.text);
+                        if (isSuccess) {
+                          Navigator.of(context, rootNavigator: true).pop({
+                            'email': _emailController.text,
+                            'password': _passwordController.text
+                          });
+                        }
+                      }
+                    : null,
                 color: Colors.green,
                 child: Text(
                   "Register",

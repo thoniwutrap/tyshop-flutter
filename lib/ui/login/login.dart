@@ -249,11 +249,18 @@ class _LoginScreenState extends State<mLoginScreen> {
   void signIn(UserRepository auth) async{
     bool isSuccess = await auth.signIn(context,emailController.text,passwordController.text);
                     if(isSuccess){
-                        Navigator.pushReplacement(
+                      print(auth.currentUser().toString());
+                      Navigator.push(
                         context,
                         PageTransition(
                             type: PageTransitionType.fade,
                             child: MenuPage()));
+
+                        // Navigator.pushReplacement(
+                        // context,
+                        // PageTransition(
+                        //     type: PageTransitionType.fade,
+                        //     child: MenuPage()));
                     }
   }
 }
