@@ -124,78 +124,9 @@ class _MySecondPage extends State<MySecondPage> {
           ),
         ],
       )),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: bottomSelectedIndex,
-        onTap: (index) {
-          bottomTapped(index);
-        },
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          new BottomNavigationBarItem(
-              icon: bottomSelectedIndex == 0
-                  ? Image.asset(
-                      'assets/images/ic_home_active.png',
-                      width: 25,
-                      height: 25,
-                    )
-                  : Image.asset(
-                      'assets/images/ic_home.png',
-                      width: 25,
-                      height: 25,
-                    ),
-              title: SizedBox.shrink()),
-          new BottomNavigationBarItem(
-              icon: bottomSelectedIndex == 1
-                  ? Image.asset(
-                      'assets/images/ic_location_active.png',
-                      width: 25,
-                      height: 25,
-                    )
-                  : Image.asset(
-                      'assets/images/ic_location.png',
-                      width: 25,
-                      height: 25,
-                    ),
-              title: SizedBox.shrink()),
-          new BottomNavigationBarItem(
-              icon: Image.asset(
-                '',
-                width: 0,
-                height: 0,
-              ),
-              title: SizedBox.shrink()),
-          new BottomNavigationBarItem(
-              icon: bottomSelectedIndex == 3
-                  ? Image.asset(
-                      'assets/images/ic_notification_active.png',
-                      width: 25,
-                      height: 25,
-                    )
-                  : Image.asset(
-                      'assets/images/ic_notification.png',
-                      width: 25,
-                      height: 25,
-                    ),
-              title: SizedBox.shrink()),
-          new BottomNavigationBarItem(
-              icon: bottomSelectedIndex == 4
-                  ? Image.asset(
-                      'assets/images/ic_profile_active.png',
-                      width: 25,
-                      height: 25,
-                    )
-                  : Image.asset(
-                      'assets/images/ic_profile.png',
-                      width: 25,
-                      height: 25,
-                    ),
-              title: SizedBox.shrink()),
-        ],
-      ),
-
       bottomNavigationBar: BottomAppBar(
           shape: CircularNotchedRectangle(),
-          notchMargin: 4.0,
+          notchMargin: 3.0,
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -231,9 +162,12 @@ class _MySecondPage extends State<MySecondPage> {
                 onPressed: (){
                   bottomTapped(1);
                 },)),
-              Expanded(),
+              Expanded(child: FlatButton(
+                onPressed: (){
+
+                },)),
               Expanded(child: IconButton(
-                icon: bottomSelectedIndex == 3
+                icon: bottomSelectedIndex == 2
                     ? Image.asset(
                   'assets/images/ic_notification_active.png',
                   width: 25,
@@ -245,22 +179,22 @@ class _MySecondPage extends State<MySecondPage> {
                   height: 25,
                 ),
                 onPressed: (){
-                  bottomTapped(1);
+                  bottomTapped(2);
                 },)),
               Expanded(child: IconButton(
-                icon: bottomSelectedIndex == 4
+                icon: bottomSelectedIndex == 3
                     ? Image.asset(
-                  'assets/images/ic_location_active.png',
+                  'assets/images/ic_profile_active.png',
                   width: 25,
                   height: 25,
                 )
                     : Image.asset(
-                  'assets/images/ic_location.png',
+                  'assets/images/ic_profile.png',
                   width: 25,
                   height: 25,
                 ),
                 onPressed: (){
-                  bottomTapped(1);
+                  bottomTapped(3);
                 },)),
             ],
           )
