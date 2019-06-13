@@ -5,19 +5,15 @@ import 'package:tyshop_app/ui/page/location/LocationScreen.dart';
 import 'package:tyshop_app/ui/page/notify/NotifyScreen.dart';
 import 'package:tyshop_app/ui/page/profile/ProfileScreen.dart';
 
-class MenuPage extends StatelessWidget {
-  const MenuPage({Key key}) : super(key: key);
-
+class MenuScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "fdsf",
-      home: MySecondPage(
-        title: "fsdsfdsfff",
-      ),
+      home: MySecondPage(),
     );
   }
 }
+
 
 class MySecondPage extends StatefulWidget {
   MySecondPage({Key key, this.title}) : super(key: key);

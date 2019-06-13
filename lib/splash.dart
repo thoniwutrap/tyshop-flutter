@@ -17,8 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigationPage() {
-   //Navigator.pushReplacementNamed(context, '/Login'); 
-   Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade, child: LoginScreen()));
+    Navigator.of(context).pushReplacementNamed('/Login');
   }
 
   @override

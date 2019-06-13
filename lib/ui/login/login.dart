@@ -113,7 +113,7 @@ class _LoginScreenState extends State<mLoginScreen> {
                   padding: const EdgeInsets.only(left: 30, right: 30),
                   child: RaisedButton(
                     onPressed: () {
-                     signIn(appState);
+                     signIn(appState,context);
                     },
                     color: Colors.green,
                     shape: new RoundedRectangleBorder(
@@ -180,7 +180,7 @@ class _LoginScreenState extends State<mLoginScreen> {
                       setState(() {
                         emailController.text = results['email'];
                         passwordController.text = results['password'];
-                        signIn(appState);
+                        signIn(appState,context);
                       });
                     }
                   },
@@ -246,15 +246,11 @@ class _LoginScreenState extends State<mLoginScreen> {
     ),
   );
 
-  void signIn(UserRepository auth) async{
+  void signIn(UserRepository auth,BuildContext context) async{
     bool isSuccess = await auth.signIn(context,emailController.text,passwordController.text);
                     if(isSuccess){
                       print(auth.currentUser().toString());
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: MenuPage()));
+                      Navigator.of(context).pushReplacementNamed('/Menu');
 
                         // Navigator.pushReplacement(
                         // context,
