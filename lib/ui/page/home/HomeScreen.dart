@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> with  AutomaticKeepAliveClientM
                     return Card(
                         child: InkWell(
                           onTap: (){
-                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ProductDetail(
+                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ProductScreen(
                               documentID: ds.documentID,
                             )));
                           },
